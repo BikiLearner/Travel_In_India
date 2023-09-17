@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.activitiees.SearchActivity">
+   <androidx.cardview.widget.CardView
+       android:backgroundTint="@color/white"
+       android:id="@+id/cardView_search"
+       android:layout_width="match_parent"
+       android:layout_height="40dp"
+       android:layout_margin="16dp"
+       android:background="@drawable/outline_card_view"
+       app:layout_constraintTop_toTopOf="parent">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+         <ImageButton
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/back_to_home_button"/>
+         <com.google.android.material.textfield.TextInputEditText
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="2"
+             android:hint="Start with Typing"
+             android:background="@android:color/transparent"
+             android:layout_gravity="bottom"
+             android:layout_marginStart="10dp"
+             android:layout_marginEnd="10dp"
+             android:textColor="@color/black"
+             />
+         <ImageButton
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:src="@drawable/baseline_clear_24"
+             android:background="@android:color/transparent"
+             android:layout_marginEnd="10dp"
+             />
+
+      </LinearLayout>
+
+   </androidx.cardview.widget.CardView>
+   <TextView
+      android:id="@+id/top_services"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+      android:text="Top Services"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:layout_margin="20dp"
+      app:layout_constraintTop_toBottomOf="@+id/cardView_search"/>
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/top_services_rv"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_constraintTop_toBottomOf="@+id/top_services"
+       android:layout_margin="20dp"/>
+
+   <TextView
+       android:id="@+id/other_searches"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Other search"
+       android:textSize="20sp"
+       android:textStyle="bold"
+       android:layout_margin="20dp"
+       app:layout_constraintTop_toBottomOf="@+id/top_services_rv"/>
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/other_searches_rv"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_constraintTop_toBottomOf="@+id/other_searches"
+       android:layout_margin="20dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

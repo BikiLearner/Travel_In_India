@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="4dp"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    app:cardCornerRadius="10dp"
+    >
+    <ImageView
+        android:id="@+id/state_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/kali_mandir"
+        android:scaleType="fitXY"/>
+    <TextView
+        android:id="@+id/no_state_image"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No\nImage"/>
+</androidx.cardview.widget.CardView>
+<TextView
+    android:id="@+id/state_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="West Bengal"
+    android:textColor="@color/black"
+    android:textSize="15sp"
+    android:gravity="center"
+    android:textStyle="bold"/>
+</LinearLayout>
