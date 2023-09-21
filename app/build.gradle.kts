@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -65,5 +66,15 @@ dependencies {
 
     //gson
     implementation ("com.google.code.gson:gson:2.10.1")
+
+
+    //Firebase
+    implementation ("com.google.firebase:firebase-auth-ktx:22.1.2")
+    implementation ("com.google.firebase:firebase-database-ktx:20.2.2")
+    implementation ("com.google.firebase:firebase-storage-ktx:20.2.1")
+
+
+    //for xml data
+    implementation("org.simpleframework:simple-xml:2.7.1")
 
 }

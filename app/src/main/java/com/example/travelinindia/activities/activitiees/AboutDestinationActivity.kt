@@ -1,51 +1,26 @@
 package com.example.travelinindia.activities.activitiees
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Intent
-import android.os.Bundle
-import android.provider.MediaStore
-import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.travelinindia.R
-import com.example.travelinindia.activities.ForConstant
 import com.example.travelinindia.activities.adapters.PopularDestinationAdapter
 import com.example.travelinindia.activities.models.PopularDestinationModel
-import com.example.travelinindia.databinding.ActivityUserProfileBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.travelinindia.databinding.ActivityAboutDestinationBinding
 
-
-class UserProfile : AppCompatActivity() {
-    private var binding:ActivityUserProfileBinding?=null
+class AboutDestinationActivity : AppCompatActivity() {
+    private var binding:ActivityAboutDestinationBinding?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityUserProfileBinding.inflate(layoutInflater)
+        binding= ActivityAboutDestinationBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-        val window= window
-        window.statusBarColor=getColor(R.color.color_primary)
-        setAllFavoritePlace()
-        setSupportActionBar(binding!!.toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true);
-        supportActionBar!!.setDisplayShowTitleEnabled(false);
-        val firebaseAuth=Firebase.auth
-        val userEmail=firebaseAuth.currentUser!!.email
-        binding!!.emailTextView.text=userEmail.toString()
-        val sharedPref=getSharedPreferences(ForConstant.myProfileData, MODE_PRIVATE)
-        val userName = sharedPref.getString(ForConstant.myProfileUserName, "")
-        binding?.usernameTextView?.text = userName.takeIf { it!!.isNotEmpty() }?.toString() ?: "No User Name"
-
-        binding!!.logoutButton.setOnClickListener {
-            firebaseAuth.signOut()
-        }
-        binding!!.profileImage.setOnClickListener {
-//           setImageOnFrameFunction()
-            val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            changeImage.launch(pickImg)
-        }
-
+        val window=window
+        window.statusBarColor= getColor(R.color.white)
+        setSupportActionBar(binding!!.aboutSectionToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setAllPopularView()
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -55,8 +30,7 @@ class UserProfile : AppCompatActivity() {
         }
         return false
     }
-
-    private fun setAllFavoritePlace(){
+    private fun setAllPopularView(){
         val list=ArrayList<PopularDestinationModel>()
         val data1= PopularDestinationModel("Siliguri","Nestled amidst the foothills of the majestic Himalayas, Siliguri is a city...","https://lh5.googleusercontent.com/p/AF1QipN77f0-qQUzJXkTAm18UANb7AAk3a5x9P3lcOsE=w548-h318-n-k-no")
         list.add(data1)
@@ -69,42 +43,12 @@ class UserProfile : AppCompatActivity() {
         val data5= PopularDestinationModel("Manali","The magnetic town of Manali beckons to the soul of adventurers, nature...","https://lh5.googleusercontent.com/proxy/2necOVou5uOu9ahA98w0yecJYVGm7KM0EbtJn0EOGtxnbPnnsz1qGp1F67ZNC2WQBPoz695U23tVQqReHkPiv21iiUxRAD2oIqf2tbwDJ1qF2FVOM3DbTnCABvnH-FHqLpsw395wVsoYtvk83E3RwF9Qu1V5Wnw=w548-h318-n-k-no")
         list.add(data5)
 
-        val adapter= PopularDestinationAdapter(this@UserProfile,list)
+        val adapter= PopularDestinationAdapter(this@AboutDestinationActivity,list)
 
-        val layoutManager = LinearLayoutManager(this@UserProfile,
+        val layoutManager = LinearLayoutManager(this@AboutDestinationActivity,
             LinearLayoutManager.HORIZONTAL,false)
 
-        binding!!.favouriteTravelRv.layoutManager = layoutManager
-        binding!!.favouriteTravelRv.adapter = adapter
+        binding!!.popularDesRv.layoutManager = layoutManager
+        binding!!.popularDesRv.adapter = adapter
     }
-    private val changeImage =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                val data = it.data
-                val imgUri = data?.data
-                binding!!.profileImage.setImageURI(imgUri)
-            }
-        }
-    private fun setImageOnFrameFunction() {
-        val pictureDialog= AlertDialog.Builder(this@UserProfile)
-        pictureDialog.setTitle("Select Action")
-        val pictureDialogActions= arrayOf("Select photo from gallery"
-            ,"Capture Image using Camera")
-        pictureDialog.setItems(pictureDialogActions){
-                _, which->
-            when(which){
-                0 ->{
-                    val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-                    changeImage.launch(pickImg)
-                }
-                1->{
-                    val cameraIntent =Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                }
-            }
-        }
-        pictureDialog.show()
-    }
-
 }

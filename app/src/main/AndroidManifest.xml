@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TravelInIndia"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.activitiees.WebHandelingActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.activitiees.GetVehicleList"
             android:exported="false" />
@@ -27,7 +32,7 @@
             android:name=".activities.activitiees.UserProfile"
             android:exported="false" />
         <activity
-            android:name=".activities.activitiees.MustVisit"
+            android:name=".activities.activitiees.AboutDestinationActivity"
             android:exported="false" />
         <activity
             android:name=".activities.activitiees.LoginPange"

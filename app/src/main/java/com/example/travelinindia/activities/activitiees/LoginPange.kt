@@ -1,5 +1,7 @@
 package com.example.travelinindia.activities.activitiees
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,24 +11,33 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import com.example.travelinindia.R
+import com.example.travelinindia.activities.ForConstant
 import com.example.travelinindia.activities.MainActivity
 import com.example.travelinindia.databinding.LoginPageLayoutBinding
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class LoginPange : AppCompatActivity() {
     private var binding:LoginPageLayoutBinding?=null
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val window=window
-        window.statusBarColor=getColor(R.color.yellow)
+        window.statusBarColor=getColor(R.color.blanchedalmond)
         binding= LoginPageLayoutBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         binding!!.loginButton.setBackgroundColor(ContextCompat.getColor(this@LoginPange, R.color.almost_teal))
         binding!!.loginButton.strokeColor=getColorStateList(R.color.black)
         binding!!.loginButton.strokeWidth=2
+        auth = Firebase.auth
+
+        checkLoginStatus()
         loginPageFunction(binding!!.loginButton, binding!!.signUpButton)
         binding!!.signUpButton.setOnClickListener {
             if(binding!!.signUpButton.text=="Login") {
@@ -75,7 +86,6 @@ class LoginPange : AppCompatActivity() {
                 // Item is not already selected, so add it to the list
                 selectedOptions.add(selectedItem!!)
             } else {
-                // Item is already selected, show a message or handle it as needed
                 Toast.makeText(this, "Item already selected", Toast.LENGTH_SHORT).show()
             }
 
@@ -85,22 +95,21 @@ class LoginPange : AppCompatActivity() {
             val userMail=binding!!.useremailEtRegister.text.toString()
             val password=binding!!.passwordEtRegister.text.toString()
             val confirmPassword=binding!!.passwordConfirmEtRegister.text.toString()
-            if(password == confirmPassword){
-                setDataToDatabase(userName,userMail,password,selectedOptions)
+            if(userMail.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+                createAccount(userMail,password)
+                val sharedPreferences = getSharedPreferences(ForConstant.myProfileData, Context.MODE_PRIVATE)
+                val editor=sharedPreferences.edit()
+                editor.putString(ForConstant.myProfileUserName,userName)
+                editor.apply()
             }else{
-                binding!!.passwordConfirmEtRegister.text!!.clear()
+                Toast.makeText(this@LoginPange,"Please Enter user name ",Toast.LENGTH_LONG).show()
             }
         }
 
 
     }
 
-    private fun setDataToDatabase(userName: String, userMail: String, password: String, selectedOptions: MutableList<String>) {
-        val intent=Intent(this@LoginPange,MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
+    @SuppressLint("SetTextI18n")
     private fun loginPageFunction(loginButton: MaterialButton, signUpButton: TextView) {
         binding!!.signupLlLayout.visibility= View.GONE
         binding!!.loginLlLayout.visibility= View.VISIBLE
@@ -110,17 +119,63 @@ class LoginPange : AppCompatActivity() {
         binding!!.loginMyAccountTv.text="Welcome Back!"
         binding!!.haveAccountOrNot.text="Don't have an account?"
 
-        val userName=binding!!.usernameEtLogin.text!!.toString()
-        val password=binding!!.passwordEtLogin.text!!.toString()
         binding!!.loginButton.setOnClickListener {
-            getDataFromLoginDatabase(userName,password)
+            val userName=binding!!.usernameEtLogin.text!!.toString()
+            val password=binding!!.passwordEtLogin.text!!.toString()
+            if(userName.isNotEmpty() && password.isNotEmpty()) {
+                signIn(userName,password)
+            }else{
+                Toast.makeText(this@LoginPange,"Please Enter user name ",Toast.LENGTH_LONG).show()
+            }
+
         }
     }
-
-    private fun getDataFromLoginDatabase(userName: String, password: String) {
-        val intent=Intent(this@LoginPange,MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun createAccount(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user=auth.currentUser
+                    Toast.makeText(
+                        baseContext,
+                        "Your account has been created",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    loginPageFunction(binding!!.loginButton, binding!!.signUpButton)
+                } else {
+                    Toast.makeText(
+                        baseContext,
+                        "Create account failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
+    private fun signIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        baseContext,
+                        "Your account has been created",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    startActivity(Intent(this@LoginPange,MainActivity::class.java))
+                    finish()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
+    private fun checkLoginStatus(){
+        if(auth.currentUser!=null) {
+            startActivity(Intent(this@LoginPange,MainActivity::class.java))
+            finish()
+        }
     }
 
 }

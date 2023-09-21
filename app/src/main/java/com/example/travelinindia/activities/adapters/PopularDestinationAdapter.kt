@@ -1,13 +1,17 @@
 package com.example.travelinindia.activities.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.travelinindia.activities.activitiees.AboutDestinationActivity
 import com.example.travelinindia.activities.impClasses.LinkToImage
 import com.example.travelinindia.activities.models.PopularDestinationModel
 import com.example.travelinindia.databinding.PopularDestinationListLayoutBinding
 
 class PopularDestinationAdapter(
+    val context: Context,
     val list:ArrayList<PopularDestinationModel>
 ) :RecyclerView.Adapter<PopularDestinationAdapter.ViewHolder>(){
     inner class ViewHolder(val binding: PopularDestinationListLayoutBinding):RecyclerView.ViewHolder(binding.root){
@@ -29,5 +33,9 @@ class PopularDestinationAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.itemBinding(list[position].destinationName,list[position].destinationDescription,list[position].imageLink)
+        holder.binding.root.setOnClickListener {
+            val intent = Intent(context,AboutDestinationActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 }

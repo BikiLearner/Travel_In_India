@@ -1,17 +1,23 @@
 package com.example.travelinindia.activities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.webkit.WebChromeClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.travelinindia.activities.activitiees.BookingActivity
 import com.example.travelinindia.activities.activitiees.SearchActivity
 import com.example.travelinindia.activities.activitiees.UserProfile
+import com.example.travelinindia.activities.activitiees.backendClass
 
 import com.example.travelinindia.activities.adapters.AllStatesAndUnionAdapter
 import com.example.travelinindia.activities.adapters.PopularDestinationAdapter
@@ -41,8 +47,14 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor=Color.parseColor("#F4ECEC")
         setSupportActionBar(binding!!.customStatusBarHome)
         supportActionBar!!.title = "My India"
+            if (!checkForInternet(this@MainActivity)) {
+                binding!!.noInternetConnection.visibility = View.VISIBLE
+                binding!!.homeScrollView.visibility = View.GONE
+            } else {
+                binding!!.noInternetConnection.visibility = View.GONE
+                binding!!.homeScrollView.visibility = View.VISIBLE
+            }
 
-//
         binding!!.webView.settings.javaScriptEnabled = true
 
         val videoId = "aPpFi0fZVAU" // Replace with your YouTube video ID
@@ -67,20 +79,24 @@ class MainActivity : AppCompatActivity() {
     private fun allBookingButton() {
         val intent= Intent(this@MainActivity,BookingActivity::class.java)
         binding!!.flightBookingButton.setOnClickListener {
-            intent.putExtra("MESSAGE_KEY", "Flights");
+            Toast.makeText(this@MainActivity,"Not Yet Implemented",Toast.LENGTH_SHORT).show()
+            intent.putExtra(ForConstant.bookingKeyName, "Flights")
             startActivity(intent)
+
         }
         binding!!.trainBookingButton.setOnClickListener {
-            intent.putExtra("MESSAGE_KEY", "Trains");
+            intent.putExtra(ForConstant.bookingKeyName, "Train")
             startActivity(intent)
         }
         binding!!.busBookingButton.setOnClickListener {
-            intent.putExtra("MESSAGE_KEY", "Buses");
-            startActivity(intent)
+            Toast.makeText(this@MainActivity,"Not Yet Implemented",Toast.LENGTH_SHORT).show()
+//            intent.putExtra(ForConstant.bookingKeyName, "Bus")
+//            startActivity(intent)
         }
         binding!!.cabBookingButton.setOnClickListener {
-            intent.putExtra("MESSAGE_KEY", "Cabs");
-            startActivity(intent)
+            Toast.makeText(this@MainActivity,"Not Yet Implemented",Toast.LENGTH_SHORT).show()
+//            intent.putExtra(ForConstant.bookingKeyName, "Cab")
+//            startActivity(intent)
         }
     }
 
@@ -103,17 +119,8 @@ class MainActivity : AppCompatActivity() {
         val data5=AllStateModel("West Bengal","https://www.bengaltourism.in/religious-pilgrimage/dak.jpg")
         list.add(data5)
         val adapter = AllStatesAndUnionAdapter(list)
-
-        // setting grid layout manager to implement grid view.
-        // in this method '2' represents number of columns to be displayed in grid view.
-
-        // setting grid layout manager to implement grid view.
-        // in this method '2' represents number of columns to be displayed in grid view.
         val layoutManager = GridLayoutManager(this, 4)
 
-        // at last set adapter to recycler view.
-
-        // at last set adapter to recycler view.
         binding!!.allStateRv.layoutManager = layoutManager
         binding!!.allStateRv.adapter = adapter
     }
@@ -130,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         val data5=PopularDestinationModel("Manali","The magnetic town of Manali beckons to the soul of adventurers, nature...","https://lh5.googleusercontent.com/proxy/2necOVou5uOu9ahA98w0yecJYVGm7KM0EbtJn0EOGtxnbPnnsz1qGp1F67ZNC2WQBPoz695U23tVQqReHkPiv21iiUxRAD2oIqf2tbwDJ1qF2FVOM3DbTnCABvnH-FHqLpsw395wVsoYtvk83E3RwF9Qu1V5Wnw=w548-h318-n-k-no")
         list.add(data5)
 
-        val adapter=PopularDestinationAdapter(list)
+        val adapter=PopularDestinationAdapter(this@MainActivity,list)
 
         val layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
 
@@ -154,35 +161,28 @@ class MainActivity : AppCompatActivity() {
         val adapter = StoriesByTravellerAdapter(list)
         binding!!.storiesByTravellerRv.adapter = adapter
     }
+    private fun checkForInternet(context: Context): Boolean {
 
 
-    private fun irctcGetData(){
-        GlobalScope.launch(Dispatchers.IO) {
-            val stationName="Howrah"
-            val client = OkHttpClient()
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-            val request = Request.Builder()
-                .url("https://irctc1.p.rapidapi.com/api/v1/searchStation?query=$stationName")
-                .get()
-                .addHeader("X-RapidAPI-Key", "5e21ce6ee7msh2516660103c493fp1a8a60jsn1b64e2e85b95")
-                .addHeader("X-RapidAPI-Host", "irctc1.p.rapidapi.com")
-                .build()
+        val network = connectivityManager.activeNetwork ?: return false
 
-            try {
-                val response = client.newCall(request).execute()
-                val responseBody = response.body?.string()
-                Log.e("Ir",responseBody.toString())
-                // Process the response here (e.g., update UI or handle data)
-                if (response.isSuccessful) {
-                    // Do something with responseBody
-                } else {
-                    // Handle unsuccessful response
-                }
-            } catch (e: Exception) {
-                // Handle any exceptions that may occur during the network request
-            }
+        // Representation of the capabilities of an active network.
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return when {
+            // Indicates this network uses a Wi-Fi transport,
+            // or WiFi has network connectivity
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+
+            // Indicates this network uses a Cellular transport. or
+            // Cellular has network connectivity
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+            // else return false
+            else -> false
         }
-
     }
-
 }

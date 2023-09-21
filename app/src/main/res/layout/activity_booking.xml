@@ -100,11 +100,12 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.google.android.material.chip.Chip
             android:layout_marginTop="20dp"
             android:id="@+id/choosing_class_booking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             />
     </LinearLayout>
     <com.google.android.material.button.MaterialButton
@@ -117,5 +118,10 @@
 
 
 
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="Apply visa online implementation"
+    android:textSize="40sp"/>
 </LinearLayout>
