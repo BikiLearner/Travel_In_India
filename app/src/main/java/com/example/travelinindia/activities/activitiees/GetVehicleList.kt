@@ -2,6 +2,8 @@ package com.example.travelinindia.activities.activitiees
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
 
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,22 +37,29 @@ class GetVehicleList : AppCompatActivity() {
 
 
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return false
+    }
 
     private fun bookingSearchListAdapterWorking(fromCode: String, toCode: String, date: String) {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     // Fetch train data using the suspend function getTrainBetweenStation
                     val arrayList = backendClass().getTrainBetweenStation(fromCode, toCode, date)
-
                     if (arrayList.isEmpty()) {
                         Toast.makeText(this@GetVehicleList, "No Element", Toast.LENGTH_LONG).show()
                     } else {
+                        binding!!.progressBar.visibility=View.GONE
                         // Show the retrieved data in a Toast (for debugging)
                         Toast.makeText(this@GetVehicleList, arrayList.toString(), Toast.LENGTH_LONG)
                             .show()
 
                         // Set up the RecyclerView and adapter to display the data
-                        val adapter = BookingListAdapter(ArrayList(arrayList))
+                        val adapter = BookingListAdapter(ArrayList(arrayList),this@GetVehicleList)
                         val layoutManager = LinearLayoutManager(this@GetVehicleList)
                         binding!!.bookingSearchRv.layoutManager = layoutManager
                         binding!!.bookingSearchRv.adapter = adapter

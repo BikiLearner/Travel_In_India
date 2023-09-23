@@ -77,4 +77,7 @@ dependencies {
     //for xml data
     implementation("org.simpleframework:simple-xml:2.7.1")
 
+    //rezorpay
+    implementation ("com.razorpay:checkout:1.6.33")
+
 }

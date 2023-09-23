@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.example.travelinindia.R
 import com.example.travelinindia.activities.ForConstant
 import com.example.travelinindia.activities.models.AirportDetails
 import com.example.travelinindia.activities.models.BookingSearchListModel
@@ -27,6 +28,8 @@ class BookingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityBookingBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+        val window=window
+        window.statusBarColor=getColor(R.color.white)
         val intent = intent
         setSupportActionBar(binding!!.bookingCustomToolBar)
         val bookingName=intent.getStringExtra(ForConstant.bookingKeyName)
@@ -40,7 +43,7 @@ class BookingActivity : AppCompatActivity() {
             trainListMenu()
         }else if(bookingName.equals("Flights")){
             GlobalScope.launch {
-                backendClass().getFlightSedule()
+//                backendClass().getFlightSedule()
 //                val airportList = backendClass().getListOfAirport()
                 withContext(Dispatchers.IO){
 //                    flightBookingMenu(airportList)
@@ -106,7 +109,7 @@ class BookingActivity : AppCompatActivity() {
             showDatePickerDialog(binding!!.getDateBooking)
         }
 //
-////
+//
 //        binding!!.swapTheStation.setOnClickListener {
 //            if(binding!!.fromStationCode.text.toString().isNotEmpty() && binding!!.toStationCode.text.toString().isNotEmpty()){
 //                val swap=binding!!.fromStationCode.text.toString()

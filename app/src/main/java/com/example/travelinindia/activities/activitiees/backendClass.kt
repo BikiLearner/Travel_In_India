@@ -2,6 +2,7 @@ package com.example.travelinindia.activities.activitiees
 
 import android.util.Log
 import com.example.travelinindia.activities.models.AirportDetails
+import com.example.travelinindia.activities.models.FareInfo
 import com.example.travelinindia.activities.models.FlightScheduleDetails
 import com.example.travelinindia.activities.models.StationNameAndCode
 import com.example.travelinindia.activities.models.trainInfoModel
@@ -38,7 +39,7 @@ class backendClass {
                     .get()
                     .addHeader(
                         "X-RapidAPI-Key",
-                        "b1044adf0bmsh60bb07c9c735a9ep1ba787jsn45077450af4c"
+                        "72897d918amsh3842dc9164d30d0p191005jsnd6faad28a903"
                     )
                     .addHeader("X-RapidAPI-Host", "irctc1.p.rapidapi.com")
                     .build()
@@ -148,6 +149,53 @@ class backendClass {
 
             return@withContext emptyList() // Return an empty list in case of an error
         }
+    suspend fun getTrainFare(
+        stationFromCode: String,
+        stationToCode: String,
+        trainNo: String
+    ): List<FareInfo> {
+        val arrayList = ArrayList<FareInfo>()
+        try {
+            withContext(Dispatchers.IO) {
+                val client = OkHttpClient()
+
+                val request = Request.Builder()
+                    .url("https://irctc1.p.rapidapi.com/api/v2/getFare?trainNo=$trainNo&fromStationCode=$stationFromCode&toStationCode=$stationToCode")
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "72897d918amsh3842dc9164d30d0p191005jsnd6faad28a903")
+                    .addHeader("X-RapidAPI-Host", "irctc1.p.rapidapi.com")
+                    .build()
+
+                val response = client.newCall(request).execute()
+                val responseBody = response.body?.string()
+
+                if (response.isSuccessful) {
+                    val jsonResponse = JSONObject(responseBody!!)
+                    val status = jsonResponse.getBoolean("status")
+
+                    if (status) {
+                        val data = jsonResponse.getJSONObject("data")
+                        val generalArray = data.getJSONArray("general")
+                        for (i in 0 until generalArray.length()) {
+                            val generalObject = generalArray.getJSONObject(i)
+                            val classType = generalObject.getString("classType")
+                            val fare = generalObject.getDouble("fare")
+                            val fareDataSet=FareInfo(classType.toString(),fare.toString())
+                            arrayList.add(fareDataSet)
+                            // Create a trainInfoModel instance and add it to the arrayList
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Handle any exceptions that may occur during the network request
+            e.printStackTrace()
+        }
+
+        return arrayList
+    }
+
+
     suspend fun getListOfAirport():ArrayList<AirportDetails>{
 
          return withContext(Dispatchers.IO) {

@@ -39,6 +39,7 @@ class UserProfile : AppCompatActivity() {
 
         binding!!.logoutButton.setOnClickListener {
             firebaseAuth.signOut()
+            onBackPressed()
         }
         binding!!.profileImage.setOnClickListener {
 //           setImageOnFrameFunction()
