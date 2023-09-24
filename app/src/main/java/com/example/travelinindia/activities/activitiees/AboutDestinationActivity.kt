@@ -1,9 +1,11 @@
 package com.example.travelinindia.activities.activitiees
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.travelinindia.R
 import com.example.travelinindia.activities.ForConstant
@@ -39,6 +41,7 @@ class AboutDestinationActivity : AppCompatActivity() {
             binding!!.attractionTv.text="Explore More"
             setAllPopularView(ArrayList(list))
         }
+        allBookingButton()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -56,5 +59,29 @@ class AboutDestinationActivity : AppCompatActivity() {
 
         binding!!.popularDesRv.layoutManager = layoutManager
         binding!!.popularDesRv.adapter = adapter
+    }
+    private fun allBookingButton() {
+        val intent= Intent(this@AboutDestinationActivity,BookingActivity::class.java)
+        binding!!.flightBookingButton.setOnClickListener {
+            Toast.makeText(this@AboutDestinationActivity,"Not Yet Implemented", Toast.LENGTH_SHORT).show()
+//            intent.putExtra(ForConstant.bookingKeyName, "Flights")
+//            startActivity(intent)
+
+        }
+        binding!!.trainBookingButton.setOnClickListener {
+            intent.putExtra(ForConstant.bookingKeyName, "Train")
+            startActivity(intent)
+        }
+        binding!!.busBookingButton.setOnClickListener {
+            Toast.makeText(this@AboutDestinationActivity,"Not Yet Implemented", Toast.LENGTH_SHORT).show()
+//            intent.putExtra(ForConstant.bookingKeyName, "Bus")
+//            startActivity(intent)
+        }
+        binding!!.cabBookingButton.setOnClickListener {
+            Toast.makeText(this@AboutDestinationActivity,"Not Yet Implemented", Toast.LENGTH_SHORT).show()
+//            intent.putExtra(ForConstant.bookingKeyName, "Cab")
+//            startActivity(intent)
+        }
+
     }
 }

@@ -33,7 +33,7 @@ class GetFareOfTrainAdapter (
         holder.itemBinding(list[position].classType,list[position].fare)
         holder.binding.root.setOnClickListener {
             val intent= Intent(context,WebHandelingActivity::class.java)
-            intent.putExtra(ForConstant.getUrl,"https://rzp.io/i/VKz8EvQ")
+            intent.putExtra(ForConstant.getUrl,"https://rzp.io/i/KS5XndDD2e")
             context.startActivity(intent)
         }
     }
